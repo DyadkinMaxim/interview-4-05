@@ -1,0 +1,144 @@
+openapi: 3.0.1
+info:
+  title: Country & City Registry API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /countries:
+    get:
+      summary: Get all countries
+      parameters:
+        - {name: pageNumber, in: query, schema: {type: integer}}
+        - {name: size, in: query, schema: {type: integer}}
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create country
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryRequest'
+      responses:
+        "201":
+          description: Created
+
+  /countries/{countryId}:
+    parameters:
+      - {name: countryId, in: path, required: true, schema: {type: integer}}
+    get:
+      summary: Get country by ID
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+    put:
+      summary: Update country
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountryRequest'
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+    delete:
+      summary: Delete country
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not Found
+
+  /countries/{countryId}/cities:
+    parameters:
+      - {name: countryId, in: path, required: true, schema: {type: integer}}
+    get:
+      summary: Get cities by country
+      parameters:
+        - {name: pageNumber, in: query, schema: {type: integer}}
+        - {name: size, in: query, schema: {type: integer}}
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+
+  /cities:
+    get:
+      summary: Get all cities
+      parameters:
+        - {name: pageNumber, in: query, schema: {type: integer}}
+        - {name: size, in: query, schema: {type: integer}}
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create city
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityRequest'
+      responses:
+        "201":
+          description: Created
+        "404":
+          description: Not Found
+
+  /cities/{cityId}:
+    parameters:
+      - {name: cityId, in: path, required: true, schema: {type: integer}}
+    get:
+      summary: Get city by ID
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+    put:
+      summary: Update city
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityRequest'
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+    delete:
+      summary: Delete city
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not Found
+
+components:
+  schemas:
+    CountryRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    CityRequest:
+      type: object
+      required: [name, countryId]
+      properties:
+        name:
+          type: string
+        population:
+          type: integer
+        countryId:
+          type: integer
